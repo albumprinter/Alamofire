@@ -73,8 +73,13 @@ open class SessionManager {
                 let appBuild = info[kCFBundleVersionKey as String] as? String ?? "Unknown"
 
                 let osNameVersion: String = {
-                    let version = ProcessInfo.processInfo.operatingSystemVersion
-                    let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+                    let versionString: String
+                    if #available(macOS 10.10, *) {
+                        let version = ProcessInfo.processInfo.operatingSystemVersion
+                        versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+                    } else {
+                        versionString = ProcessInfo.processInfo.operatingSystemVersionString
+                    }
 
                     let osName: String = {
                         #if os(iOS)
@@ -605,6 +610,7 @@ open class SessionManager {
     /// - parameter method:                  The HTTP method. `.post` by default.
     /// - parameter headers:                 The HTTP headers. `nil` by default.
     /// - parameter encodingCompletion:      The closure called when the `MultipartFormData` encoding is complete.
+    @available(macOS 10.10, *)
     open func upload(
         multipartFormData: @escaping (MultipartFormData) -> Void,
         usingThreshold encodingMemoryThreshold: UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold,
@@ -650,6 +656,7 @@ open class SessionManager {
     ///                                      `multipartFormDataEncodingMemoryThreshold` by default.
     /// - parameter urlRequest:              The URL request.
     /// - parameter encodingCompletion:      The closure called when the `MultipartFormData` encoding is complete.
+    @available(macOS 10.10, *)
     open func upload(
         multipartFormData: @escaping (MultipartFormData) -> Void,
         usingThreshold encodingMemoryThreshold: UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold,

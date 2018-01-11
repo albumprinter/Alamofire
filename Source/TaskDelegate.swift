@@ -70,7 +70,9 @@ open class TaskDelegate: NSObject {
 
             operationQueue.maxConcurrentOperationCount = 1
             operationQueue.isSuspended = true
-            operationQueue.qualityOfService = .utility
+            if #available(macOS 10.10, *) {
+                operationQueue.qualityOfService = .utility
+            }
 
             return operationQueue
         }()
